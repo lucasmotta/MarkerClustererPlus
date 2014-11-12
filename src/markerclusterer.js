@@ -141,6 +141,26 @@ ClusterIcon.prototype.onAdd = function () {
       var theBounds;
       var mz;
       var mc = cClusterIcon.cluster_.getMarkerClusterer();
+
+      var clusters = mc.getClusters();
+      if(clusters.length === 1) {
+        e.cancelBubble = true;
+        if (e.stopPropagation) {
+          e.stopPropagation();
+        }
+
+        var markers = mc.getMarkers().filter(function(marker) {
+          return marker.isAdded;
+        });
+
+        if(markers.length) {
+          google.maps.event.trigger(mc, "multiple-markers", markers);
+          return;
+        }
+
+      }
+
+
       /**
        * This event is fired when a cluster marker is clicked.
        * @name MarkerClusterer#click
